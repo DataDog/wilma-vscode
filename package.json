@@ -1,0 +1,137 @@
+{
+  "name": "wilma-vscode",
+  "displayName": "wilma-vscode",
+  "description": "VS Code extension for the Wilma debugging tool",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/wilma.toml"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "wilma-vscode.createNote",
+        "title": "Create Probe",
+        "enablement": "!commentIsEmpty"
+      },
+      {
+        "command": "wilma-vscode.editNote",
+        "title": "Edit",
+        "icon": "$(pencil)"
+      },
+      {
+        "command": "wilma-vscode.deleteNote",
+        "title": "Delete",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "wilma-vscode.deleteNoteComment",
+        "title": "Delete",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "wilma-vscode.saveNote",
+        "title": "Save"
+      },
+      {
+        "command": "wilma-vscode.cancelsaveNote",
+        "title": "Cancel"
+      },
+      {
+        "command": "wilma-vscode.dispose",
+        "title": "Remove All Notes"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "wilma-vscode.createNote",
+          "when": "false"
+        },
+        {
+          "command": "wilma-vscode.deleteNote",
+          "when": "false"
+        },
+        {
+          "command": "wilma-vscode.deleteNoteComment",
+          "when": "false"
+        }
+      ],
+      "comments/commentThread/title": [
+        {
+          "command": "wilma-vscode.deleteNote",
+          "group": "navigation",
+          "when": "commentController == wilma-probes && !commentThreadIsEmpty"
+        }
+      ],
+      "comments/commentThread/context": [
+        {
+          "command": "wilma-vscode.createNote",
+          "group": "inline",
+          "when": "commentController == wilma-probes && commentThreadIsEmpty"
+        }
+      ],
+      "comments/comment/title": [
+        {
+          "command": "wilma-vscode.editNote",
+          "group": "group@1",
+          "when": "commentController == wilma-probes"
+        },
+        {
+          "command": "wilma-vscode.deleteNoteComment",
+          "group": "group@2",
+          "when": "commentController == wilma-probes && comment == canDelete"
+        }
+      ],
+      "comments/comment/context": [
+        {
+          "command": "wilma-vscode.cancelsaveNote",
+          "group": "inline@1",
+          "when": "commentController == wilma-probes"
+        },
+        {
+          "command": "wilma-vscode.saveNote",
+          "group": "inline@2",
+          "when": "commentController == wilma-probes"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/iarna__toml": "^2.0.2",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.9.3",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  },
+  "dependencies": {
+    "@iarna/toml": "^1.7.1"
+  }
+}
