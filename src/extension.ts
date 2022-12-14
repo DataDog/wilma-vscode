@@ -6,6 +6,7 @@ import { activateProbeComments } from './controller/probes';
 import { getResourcesUri } from './resources';
 import { decorationHandler } from './view/decorations';
 import { showProbes } from './view/probes';
+import { activateProbeTree } from './controller/probes-tree';
 
 
 
@@ -21,6 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let resourcesUri = getResourcesUri(context);
 	let updateDecorations = decorationHandler(resourcesUri);
+
+	activateProbeTree(context);
 
 	let commentController = activateProbeComments(context);
 	showProbes(vscode.workspace.workspaceFolders[0].uri, commentController).then(() => {
