@@ -14,7 +14,31 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "wilma-explorer",
+          "title": "Wilma Explorer",
+          "icon": "resources/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "wilma-explorer": [
+        {
+          "id": "wilma-probes",
+          "name": "Wilma Probes",
+          "icon": "resources/logo.svg",
+          "contextualTitle": "Wilma Probes Explorer"
+        }
+      ]
+    },
     "commands": [
+      {
+        "command": "wilma-probes.deleteEntry",
+        "title": "Delete Probe",
+        "icon": "$(trash)"
+      },
       {
         "command": "wilma-vscode.createNote",
         "title": "Create Probe",
@@ -99,6 +123,13 @@
           "command": "wilma-vscode.saveNote",
           "group": "inline@2",
           "when": "commentController == wilma-probes"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "wilma-probes.deleteEntry",
+          "when": "view == wilma-probes && viewItem == probe",
+          "group": "inline"
         }
       ]
     }

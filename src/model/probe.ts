@@ -1,8 +1,17 @@
 import * as vscode from 'vscode';
 import { parse, stringify } from '@iarna/toml';
 
+export enum ProbeCommentAction {
+    Create = 0,
+    Update = 1,
+    Remove = 2
+}
+
+type CommentProbeChangesCallback = (action: ProbeCommentAction, probe: ProbeComment) => void;
+
 let commentId = 1;
-let comments = new Map<number, ProbeComment>();
+const comments = new Map<number, ProbeComment>();
+const commentsChanges: CommentProbeChangesCallback[] = [];
 
 export class ProbeComment implements vscode.Comment {
     id: number;
@@ -32,12 +41,16 @@ export function createProbeComment(thread: vscode.CommentThread, text: string, f
 
     comments.set(newComment.id, newComment);
 
+    notifyProbeChange(ProbeCommentAction.Create, newComment);
+
     thread.comments = [...thread.comments, newComment];
 }
 
 
 export function deleteProbeComment(comment: ProbeComment) {
     comments.delete(comment.id);
+
+    notifyProbeChange(ProbeCommentAction.Remove, comment);
 }
 
 
@@ -51,7 +64,18 @@ export function parseWilmaFile(uri: vscode.Uri) {
 }
 
 
-export function getProbesForDocument(uri: vscode.Uri) {
+export function getProbesDocuments(): vscode.Uri[] {
+    let allUris = new Map<string, vscode.Uri>();
+
+    for (let uri of Array.from(comments.values()).map(comment => comment.parent.uri)) {
+        if (!(uri.fsPath in allUris)) {
+            allUris.set(uri.fsPath, uri);
+        }
+    }
+    return Array.from(allUris.values());
+}
+
+export function getProbesForDocument(uri: vscode.Uri): ProbeComment[] {
     return Array.from(comments.values()).filter((comment) => comment.parent.uri.fsPath === uri.fsPath);
 }
 
@@ -74,4 +98,12 @@ export function writeWilmaFile() {
         );
         vscode.workspace.fs.writeFile(wilmaFileUri, Buffer.from(stringify(data)));
     });
+}
+
+export function onProbeChange(callback: CommentProbeChangesCallback) {
+    commentsChanges.push(callback);
+}
+
+export function notifyProbeChange(action: ProbeCommentAction, probe: ProbeComment) {
+    commentsChanges.forEach(callback => callback(action, probe));
 }
