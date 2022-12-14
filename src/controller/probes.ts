@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
 import { relative } from 'path';
 
-import { ProbeComment, createProbeComment, writeWilmaFile, deleteProbeComment } from '../model/probe';
-import { decorationHandler } from '../view/decorations';
-import { getResourcesUri } from '../resources';
+import { ProbeComment, createProbeComment, writeWilmaFile, deleteProbeComment, notifyProbeChange, ProbeCommentAction } from '../model/probe';
+import { updateDecorations } from '../view/decorations';
 
 
 export function activateProbeComments(context: vscode.ExtensionContext): vscode.CommentController {
@@ -12,7 +11,7 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
 
     function update() {
         writeWilmaFile();
-        decorationHandler(getResourcesUri(context))(vscode.window.activeTextEditor);
+        updateDecorations(vscode.window.activeTextEditor);
     }
 
     commentController.commentingRangeProvider = {
@@ -90,6 +89,7 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
         });
 
         update();
+        notifyProbeChange(ProbeCommentAction.Update, comment);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('wilma-vscode.editNote', (comment: ProbeComment) => {
