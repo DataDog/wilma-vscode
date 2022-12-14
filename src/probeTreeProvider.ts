@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 import { getProbesDocuments, getProbesForDocument, onProbeChange, ProbeComment } from './model/probe';
+import { icons } from './resources';
 
 
 export class ProbeTreeProvider implements vscode.TreeDataProvider<ProbeNode> {
@@ -40,6 +39,18 @@ export class ProbeTreeProvider implements vscode.TreeDataProvider<ProbeNode> {
     }
 }
 
+function sanitizeDescription(code: string | undefined) {
+    if (!code) {
+        return "";
+    }
+    let lines = code.split(/\n/).filter(s=>s.trim());
+    if (lines.length === 1) {
+        return lines[0];
+    } else {
+        return `${lines[0]}...`;
+    }
+}
+
 export class ProbeNode extends vscode.TreeItem {
 
     constructor(
@@ -50,12 +61,13 @@ export class ProbeNode extends vscode.TreeItem {
     ) {
         super(probe !== undefined ? `${probe.file}:${probe.parent.range.start.line + 1}` : `${uri.path}`, collapsibleState);
         this.tooltip = probe?.body;
-        this.description = probe?.body?.toString().split(/\n/)[0];
+        this.description = sanitizeDescription(probe?.body?.toString());
 
         if (this.probe) {
-            this.iconPath = path.join(__filename, '..', '..', 'resources', 'logo.svg');
+            this.iconPath = icons.logo;
         } else {
             this.iconPath = vscode.ThemeIcon.File;
+            this.resourceUri = vscode.Uri.parse("_.py");
         }
     }
 

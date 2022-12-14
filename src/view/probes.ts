@@ -23,7 +23,7 @@ export function showProbes(workspaceUri: vscode.Uri, commentController: vscode.C
                     vscode.Uri.joinPath(workspaceUri, file),
                     new vscode.Range(lineno - 1, 0, lineno - 1, 0), []
                 );
-                thread.collapsibleState = vscode.CommentThreadCollapsibleState.Expanded;
+                thread.canReply = false;
                 createProbeComment(thread, expr as string, file);
             }
 

@@ -98,6 +98,6 @@ export function onProbeChange(callback: CommentProbeChangesCallback) {
     commentsChanges.push(callback);
 }
 
-function notifyProbeChange(action: string, probe: ProbeComment) {
+export function notifyProbeChange(action: string, probe: ProbeComment) {
     commentsChanges.forEach(callback => callback(action, probe));
 }

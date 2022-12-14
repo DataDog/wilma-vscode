@@ -3,10 +3,10 @@
 import * as vscode from 'vscode';
 
 import { activateProbeComments } from './controller/probes';
-import { getResourcesUri } from './resources';
-import { decorationHandler } from './view/decorations';
+import { setResourceFromContext } from './resources';
+import { updateDecorations } from './view/decorations';
 import { showProbes } from './view/probes';
-import { activateProbeTree } from './controller/probes-tree';
+import { activateProbeTree } from './controller/probesTree';
 
 
 
@@ -20,9 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	let resourcesUri = getResourcesUri(context);
-	let updateDecorations = decorationHandler(resourcesUri);
-
+	setResourceFromContext(context);
 	activateProbeTree(context);
 
 	let commentController = activateProbeComments(context);
