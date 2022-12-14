@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { relative } from 'path';
 
 import { ProbeComment, createProbeComment, writeWilmaFile, deleteProbeComment, notifyProbeChange, ProbeCommentAction } from '../model/probe';
 import { updateDecorations } from '../view/decorations';
+import { relativePath } from '../utils';
 
 
 export function activateProbeComments(context: vscode.ExtensionContext): vscode.CommentController {
@@ -116,9 +116,7 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
         createProbeComment(
             reply.thread,
             reply.text,
-            vscode.workspace.workspaceFolders
-                ? relative(vscode.workspace.workspaceFolders[0].uri.fsPath, reply.thread.uri.fsPath)
-                : reply.thread.uri.fsPath
+            relativePath(reply.thread.uri)
         );
     }
 

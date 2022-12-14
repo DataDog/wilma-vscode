@@ -27,12 +27,16 @@ export class ProbeComment implements vscode.Comment {
         public parent: vscode.CommentThread,
         public contextValue?: string
     ) {
-        this.id = ++commentId; // TODO: Make this `${file}:${parent.range.start.line}`
+        this.id = ++commentId; // TODO: Make this `${file}:${linenum}`
         this.body = this.wrappedExpression();
     }
 
     public wrappedExpression(): vscode.MarkdownString {
         return new vscode.MarkdownString(`~~~py\n${this.expression}\n~~~`);
+    }
+
+    get linenum() {
+        return this.parent.range.start.line + 1;
     }
 }
 
@@ -103,7 +107,7 @@ export function writeWilmaFile() {
             new Map(
                 Array.from(
                     comments,
-                    ([_, probe]) => [`${probe.file}:${probe.parent.range.start.line + 1}`, probe.expression + "\n"]
+                    ([_, probe]) => [`${probe.file}:${probe.linenum}`, probe.expression + "\n"]
                 )
             )
         );

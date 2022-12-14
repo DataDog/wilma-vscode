@@ -23,7 +23,7 @@ export function updateDecorations(editor: vscode.TextEditor | undefined) {
                 overviewRulerColor: 'orange',
                 overviewRulerLane: vscode.OverviewRulerLane.Left
             });
-            let line = probe.parent.range.start.line;
+            let line = probe.linenum - 1;
 
             editor.setDecorations(iconDecoration, [new vscode.Range(
                 editor.document.lineAt(line).range.start,
