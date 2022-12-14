@@ -4,11 +4,14 @@ import { parse, stringify } from '@iarna/toml';
 let commentId = 1;
 let comments = new Map<number, ProbeComment>();
 
+
 export class ProbeComment implements vscode.Comment {
     id: number;
     label: string | undefined;
+    body: vscode.MarkdownString | string;
+
     constructor(
-        public body: string | vscode.MarkdownString,
+        public expression: string,
         public mode: vscode.CommentMode,
         public author: vscode.CommentAuthorInformation,
         public file: string,
@@ -16,13 +19,18 @@ export class ProbeComment implements vscode.Comment {
         public contextValue?: string
     ) {
         this.id = ++commentId; // TODO: Make this `${file}:${parent.range.start.line}`
+        this.body = this.wrappedExpression();
+    }
+
+    public wrappedExpression(): vscode.MarkdownString {
+        return new vscode.MarkdownString(`~~~py\n${this.expression}\n~~~`);
     }
 }
 
 
 export function createProbeComment(thread: vscode.CommentThread, text: string, file: string) {
     let newComment = new ProbeComment(
-        text,
+        text.trim(),
         vscode.CommentMode.Preview,
         { name: 'Wilma' },
         file,
@@ -33,6 +41,9 @@ export function createProbeComment(thread: vscode.CommentThread, text: string, f
     comments.set(newComment.id, newComment);
 
     thread.comments = [...thread.comments, newComment];
+
+    // We can only have one probe per line so don't allow adding replies
+    thread.canReply = false;
 }
 
 
@@ -68,7 +79,7 @@ export function writeWilmaFile() {
             new Map(
                 Array.from(
                     comments,
-                    ([id, probe]) => [`${probe.file}:${probe.parent.range.start.line + 1}`, probe.body + "\n"]
+                    ([_, probe]) => [`${probe.file}:${probe.parent.range.start.line + 1}`, probe.expression + "\n"]
                 )
             )
         );

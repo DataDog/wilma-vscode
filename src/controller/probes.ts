@@ -78,6 +78,9 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
             return;
         }
 
+        comment.expression = comment.body as string;
+        comment.body = comment.wrappedExpression();
+
         comment.parent.comments = comment.parent.comments.map(cmt => {
             if ((cmt as ProbeComment).id === comment.id) {
                 cmt.mode = vscode.CommentMode.Preview;
@@ -93,6 +96,8 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
         if (!comment.parent) {
             return;
         }
+
+        comment.body = comment.expression;
 
         comment.parent.comments = comment.parent.comments.map(cmt => {
             if ((cmt as ProbeComment).id === comment.id) {
