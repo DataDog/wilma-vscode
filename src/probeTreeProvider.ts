@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { getProbesDocuments, getProbesForDocument, onProbeChange, ProbeComment } from './model/probe';
 import { icons } from './resources';
+import { relativePath } from './utils';
 
 
 export class ProbeTreeProvider implements vscode.TreeDataProvider<ProbeNode> {
@@ -29,7 +30,9 @@ export class ProbeTreeProvider implements vscode.TreeDataProvider<ProbeNode> {
         if (element !== undefined) {
             return Promise.resolve(
                 getProbesForDocument(element.uri).
-                    map(comment => new ProbeNode(comment.parent.uri, vscode.TreeItemCollapsibleState.None, comment)));
+                    sort((a,b)=> a.linenum - b.linenum).
+                    map(comment => new ProbeNode(comment.parent.uri, vscode.TreeItemCollapsibleState.None, comment))
+            );
         } else {
             return Promise.resolve(
                 getProbesDocuments().
@@ -59,9 +62,9 @@ export class ProbeNode extends vscode.TreeItem {
         public readonly probe?: ProbeComment,
         public readonly command?: vscode.Command
     ) {
-        super(probe !== undefined ? `${probe.file}:${probe.parent.range.start.line + 1}` : `${uri.path}`, collapsibleState);
+        super(probe !== undefined ? `line ${probe.linenum}` : relativePath(uri), collapsibleState);
         this.tooltip = probe?.body;
-        this.description = sanitizeDescription(probe?.body?.toString());
+        this.description = sanitizeDescription(probe?.expression);
 
         if (this.probe) {
             this.iconPath = icons.logo;
