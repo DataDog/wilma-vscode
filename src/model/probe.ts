@@ -1,7 +1,13 @@
 import * as vscode from 'vscode';
 import { parse, stringify } from '@iarna/toml';
 
-type CommentProbeChangesCallback = (action: string, probe: ProbeComment) => void;
+export enum ProbeCommentAction {
+    Create = 0,
+    Update = 1,
+    Remove = 2
+}
+
+type CommentProbeChangesCallback = (action: ProbeCommentAction, probe: ProbeComment) => void;
 
 let commentId = 1;
 const comments = new Map<number, ProbeComment>();
@@ -35,7 +41,7 @@ export function createProbeComment(thread: vscode.CommentThread, text: string, f
 
     comments.set(newComment.id, newComment);
 
-    notifyProbeChange('add', newComment);
+    notifyProbeChange(ProbeCommentAction.Create, newComment);
 
     thread.comments = [...thread.comments, newComment];
 }
@@ -44,7 +50,7 @@ export function createProbeComment(thread: vscode.CommentThread, text: string, f
 export function deleteProbeComment(comment: ProbeComment) {
     comments.delete(comment.id);
 
-    notifyProbeChange('delete', comment);
+    notifyProbeChange(ProbeCommentAction.Remove, comment);
 }
 
 
@@ -60,7 +66,7 @@ export function parseWilmaFile(uri: vscode.Uri) {
 
 export function getProbesDocuments(): vscode.Uri[] {
     let allUris = new Map<string, vscode.Uri>();
-    
+
     for (let uri of Array.from(comments.values()).map(comment => comment.parent.uri)) {
         if (!(uri.fsPath in allUris)) {
             allUris.set(uri.fsPath, uri);
@@ -98,6 +104,6 @@ export function onProbeChange(callback: CommentProbeChangesCallback) {
     commentsChanges.push(callback);
 }
 
-export function notifyProbeChange(action: string, probe: ProbeComment) {
+export function notifyProbeChange(action: ProbeCommentAction, probe: ProbeComment) {
     commentsChanges.forEach(callback => callback(action, probe));
 }

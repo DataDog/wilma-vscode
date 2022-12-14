@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { relative } from 'path';
 
-import { ProbeComment, createProbeComment, writeWilmaFile, deleteProbeComment, notifyProbeChange } from '../model/probe';
+import { ProbeComment, createProbeComment, writeWilmaFile, deleteProbeComment, notifyProbeChange, ProbeCommentAction } from '../model/probe';
 import { updateDecorations } from '../view/decorations';
 
 
@@ -86,7 +86,7 @@ export function activateProbeComments(context: vscode.ExtensionContext): vscode.
         });
 
         update();
-        notifyProbeChange("edit", comment);
+        notifyProbeChange(ProbeCommentAction.Update, comment);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('wilma-vscode.editNote', (comment: ProbeComment) => {
