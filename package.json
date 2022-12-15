@@ -2,6 +2,7 @@
   "name": "wilma-vscode",
   "displayName": "wilma-vscode",
   "description": "VS Code extension for the Wilma debugging tool",
+  "repository": "https://github.com/DataDog/Wilma",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.74.0"
