@@ -27,9 +27,15 @@
       "wilma-explorer": [
         {
           "id": "wilma-probes",
-          "name": "Wilma Probes",
+          "name": "Probes",
           "icon": "resources/logo.svg",
           "contextualTitle": "Wilma Probes Explorer"
+        },
+        {
+          "id": "wilma-captures",
+          "name": "Captures",
+          "icon": "resources/logo.svg",
+          "contextualTitle": "Wilma Captures Explorer"
         }
       ]
     },
