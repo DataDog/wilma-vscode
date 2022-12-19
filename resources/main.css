@@ -1,0 +1,94 @@
+body {
+	background-color: transparent;
+}
+
+/* REMOVE */
+
+.obj {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 2px 5px;
+    border: 1px solid var(--vscode-panel-border);
+}
+
+.timeline-list {
+	list-style: none;
+	padding: 0;
+}
+
+.timeline-entry {
+	width: 100%;
+	display: flex;
+	border: 1px solid var(--vscode-input-border);
+    padding-bottom: 5px;
+}
+
+.timeline-entry .guide {
+    width: 5px;
+    position: relative;
+    margin: 0px 5px;
+    align-self: stretch;
+    border-left: 1px solid #aaa;
+}
+
+.timeline-entry .guide::after {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    left: -5px;
+    bottom: 15px;
+    content: "⬢";
+}
+
+.timeline-entry .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.timeline-entry .file .line {
+    opacity: .7;
+    margin-left: 0.5em;
+    font-size: .9em;
+    white-space: pre;
+}
+
+.timeline-entry .content.current .value {
+    background: rgba(253, 24, 234, 0.385);
+    border-color: rgba(253, 24, 234, 0.75);;
+}
+
+.timeline-entry .value {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 2px 5px;
+    border: 1px solid var(--vscode-panel-border);
+}
+
+.color-preview {
+	width: 2em;
+	height: 2em;
+}
+
+.color-preview:hover {
+	outline: inset white;
+}
+
+.color-input {
+	display: block;
+	flex: 1;
+	width: 100%;
+	color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+	border: none;
+	padding: 0 0.6em;
+}
+
+.add-color-button {
+	display: block;
+	border: none;
+	margin: 0 auto;
+}

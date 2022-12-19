@@ -28,6 +28,8 @@ export function activate(context: vscode.ExtensionContext) {
 		updateDecorations(vscode.window.activeTextEditor);
 	});
 
+	vscode.window.registerWebviewViewProvider
+
 	// TODO: Just for testing
 	// let assetUri = vscode.Uri.joinPath(context.extensionUri, 'resources');
 
