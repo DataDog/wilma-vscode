@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { getProbesDocuments, getProbesForDocument, onProbeChange, ProbeComment } from './model/probe';
-import { icons } from './resources';
-import { relativePath } from './utils';
+import { getProbesDocuments, getProbesForDocument, onProbeChange, ProbeComment } from '../model/probe';
+import { icons } from '../resources';
+import { relativePath } from '../utils';
 
 
 export class ProbeTreeProvider implements vscode.TreeDataProvider<ProbeNode> {

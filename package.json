@@ -15,6 +15,11 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "breakpoints": [
+      {
+        "language": "python"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -37,6 +42,19 @@
           "name": "Captures",
           "icon": "resources/logo.svg",
           "contextualTitle": "Wilma Captures Explorer"
+        },
+        {
+          "id": "wilma-stack",
+          "name": "Stack",
+          "icon": "resources/logo.svg",
+          "contextualTitle": "Wilma Stack Explorer"
+        },
+        {
+          "id": "wilma-timeline",
+          "type": "webview",
+          "name": "Timeline",
+          "icon": "resources/logo.svg",
+          "contextualTitle": "Wilma Timeline Explorer"
         }
       ]
     },
